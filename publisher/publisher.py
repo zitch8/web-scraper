@@ -36,7 +36,7 @@ class Publisher:
                 socket_connect_timeout=5
             )
             self.redis_client.ping()
-            logger.info("Connected to Redis successfully at HOST: {redis_host}:{redis_port}, DB: {redis_db}")  
+            logger.info(f"Connected to Redis successfully at HOST: {redis_host}:{redis_port}, DB: {redis_db}")  
         except RedisError as e:
             logger.error(f"Failed to connect to Redis: {e}")
             raise
@@ -71,7 +71,7 @@ class Publisher:
         """Publish single article to appropriate priority queue in Redis"""
         try:
             queue_name = self.PRIORITY_DICT.get(
-                article.priority.lower()
+                article.priority.value
             )
 
             article_json = json.dumps(asdict(article))
@@ -106,6 +106,38 @@ class Publisher:
         logger.info(f"Batch publish summary: {summary}")
         return summary
     
+    def get_queue_stats(self)->Dict[str, int]:
+        """Get current queue lengths"""
+        stats = {}
+        for priority, queue_name in self.PRIORITY_DICT.items():
+            try:
+                length = self.redis_client.llen(queue_name)
+                stats[priority] = length
+            except RedisError as e:
+                logger.error(f"Failed to get length of queue {queue_name}: {e}")
+                stats[priority] = -1  # Indicate error
+
+        return stats
+    
+    def _close(self):
+        """Close Redis connection"""
+        try:
+            self.redis_client.close()
+            logger.info("Closed Redis connection successfully")
+        except RedisError as e:
+            logger.error(f"Failed to close Redis connection: {e}")
+    
+    def __exit__(self, exc_type, exc_value, traceback):
+        self.close()
+    
+    def __enter__(self):
+        return self
+
+    def __del__(self):
+        try:
+            self.close()
+        except Exception:
+            pass
     # TODO: Implement queue monitoring and retry logic
 
     
