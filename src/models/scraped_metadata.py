@@ -7,7 +7,8 @@ class ScrapedArticle:
     id: str
     url: str
     title: str
-    scraped_at: str  # ISO formatted datetime string
+    created_at: str  # ISO formatted datetime string
+    updated_at: Optional[str]  # ISO formatted datetime string
     scraped_at: Optional[str] = None  # ISO formatted datetime string
     status: str = "pending"
     error_message: Optional[str] = None

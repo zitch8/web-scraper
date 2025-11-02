@@ -1,18 +1,14 @@
 from enum import Enum
-from dataclasses import dataclass
-
-class Priority(Enum):
-    HIGH = 'high'
-    MEDIUM = 'medium'
-    LOW = 'low'
+from dataclasses import dataclass, asdict
+from typing import Literal, Dict, Any
 
 @dataclass
-class Article():
+class Article:
     id: str
     url: str
     source: str
     category: str
-    priority: str
+    priority: Literal["high", "medium", "low"]
     
     # def __post__init__(self):
     #     self.validate()
@@ -28,12 +24,10 @@ class Article():
             raise ValueError("Article category must be a string")
         if not isinstance(self.priority, str):
             raise ValueError("Article priority must be a string")
-        else:
-            try:
-                self.priority = Priority(self.priority.lower())
-            except ValueError:
-                raise ValueError("Article priority must be one of: high, medium, low")
             
         return True
 
-        # TODO: Parse priority to Priority class
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert to dictionary"""
+        return asdict(self)
+        

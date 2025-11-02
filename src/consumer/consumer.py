@@ -6,6 +6,8 @@ class ArticleScraper:
         self.timeout = timeout
         self.max_retries = max_retries
         self.session = requests.Session()
-    
+
+
+    # TODO: Create rotating proxy server
 
     # TODO: Add Beautiful Soup parsing logic
