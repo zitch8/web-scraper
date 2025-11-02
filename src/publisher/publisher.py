@@ -67,7 +67,7 @@ class Publisher:
             logger.error(f"Unexpected error loading articles from {json_file}: {e}")
             raise
 
-    def publish_article(self, article: Article) -> bool:
+    def _publish_article(self, article: Article) -> bool:
         """Publish single article to appropriate priority queue in Redis"""
         try:
             queue_name = self.PRIORITY_DICT.get(
@@ -97,7 +97,7 @@ class Publisher:
         }
 
         for article in articles:
-            if self.publish_article(article):
+            if self._publish_article(article):
                 summary['successful'] += 1
                 summary['by_priority'][article.priority.lower()] += 1
             else:
@@ -119,7 +119,7 @@ class Publisher:
 
         return stats
     
-    def _close(self):
+    def close(self):
         """Close Redis connection"""
         try:
             self.redis_client.close()
@@ -138,6 +138,7 @@ class Publisher:
             self.close()
         except Exception:
             pass
+        
     # TODO: Implement queue monitoring and retry logic
 
     
