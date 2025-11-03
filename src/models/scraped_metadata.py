@@ -1,12 +1,10 @@
 from typing import Optional, List, Dict, Any
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass, field, asdict
 
-@dataclass 
+@dataclass
 class SocialPlatformMetadata:
-    title: Optional[str] = None
-    description: Optional[str] = None
-    site_name: Optional[str] = None
-    creator: Optional[str] = None
+    publisher: Optional[str] = None
+    properties: Dict[str, Optional[str]] = field(default_factory=dict)
 
 @dataclass
 class FacebookMetadata(SocialPlatformMetadata):
@@ -15,7 +13,8 @@ class FacebookMetadata(SocialPlatformMetadata):
 
 @dataclass
 class TwitterMetadata(SocialPlatformMetadata):
-    pass
+    creator: Optional[str] = None
+    card: Optional[str] = None
 
 @dataclass
 class SocialMediaMetadata:
@@ -24,47 +23,30 @@ class SocialMediaMetadata:
 
 @dataclass
 class ScrapedMetadata:
-    """Scraped article data model"""
+    """Structured metadata extracted from an HTML document."""
 
     # Basic Metadata
     title: Optional[str] = None
     description: Optional[str] = None
-    keywords: Optional[List[str]] = None
+    keywords: List[str] = field(default_factory=list)
     author: Optional[str] = None
-    
+    site_name: Optional[str] = None
+
     # Dates
     published_date: Optional[str] = None
     modified_date: Optional[str] = None
 
     # Media
-    images: Optional[List[str]] = None
+    image: Optional[str] = None
     canonical_url: Optional[str] = None
 
-    # Social Media Metadata
+    # Social
     social_media: Optional[SocialMediaMetadata] = None
 
-    # # Facebook Open Graph metadata
-    # fb_app_id: Optional[str] = None
-    # fb_page_id: Optional[str] = None
-    # og_title: Optional[str] = None
-    # og_description: Optional[str] = None
-    # og_image: Optional[str] = None
-    # og_site_name: Optional[str] = None
-    # article_publisher: Optional[str] = None
-    # og_type: Optional[str] = None
-
-    # # Twitter Card metadata
-    # twitter_card: Optional[str] = None
-    # twitter_title: Optional[str] = None
-    # twitter_description: Optional[str] = None
-    # twitter_image: Optional[str] = None
-    # twitter_creator: Optional[str] = None
-    # twitter_site: Optional[str] = None
-
     def is_valid(self) -> bool:
-        """Check if scraped content is valid (has at least a title)"""
-        return bool(self.title)
-    
+        """Check if scraped content is valid (has at least a non-empty title)."""
+        return bool(self.title and self.title.strip())
+
     def to_dict(self) -> Dict[str, Any]:
-        """Convert to dictionary"""
+        """Convert dataclass to dictionary."""
         return asdict(self)
