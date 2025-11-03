@@ -1,16 +1,32 @@
 from typing import Optional, List, Dict, Any
 from dataclasses import dataclass, asdict
 
+@dataclass 
+class SocialPlatformMetadata:
+    title: Optional[str] = None
+    description: Optional[str] = None
+    site_name: Optional[str] = None
+    creator: Optional[str] = None
+
+@dataclass
+class FacebookMetadata(SocialPlatformMetadata):
+    page_id: Optional[str] = None
+    app_id: Optional[str] = None
+
+@dataclass
+class TwitterMetadata(SocialPlatformMetadata):
+    pass
+
 @dataclass
 class SocialMediaMetadata:
-    facebook: Dict[str, Optional[str]] = None
-    twitter: Dict[str, Optional[str]] = None
+    facebook: Optional[FacebookMetadata] = None
+    twitter: Optional[TwitterMetadata] = None
 
 @dataclass
 class ScrapedMetadata:
     """Scraped article data model"""
 
-    # Scraped content
+    # Basic Metadata
     title: Optional[str] = None
     description: Optional[str] = None
     keywords: Optional[List[str]] = None
