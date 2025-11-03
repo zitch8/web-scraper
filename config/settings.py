@@ -165,7 +165,7 @@ class Settings:
     
     def _load_yaml_config(self) -> Dict[str, Any]:
         """Load configuration from a YAML file."""
-        yaml_file_path = Path(__file__).resolve().parent.parent / 'config.yaml'
+        yaml_file_path = Path(__file__).resolve().parent / 'config.yaml'
         if yaml_file_path.exists():
             with open(yaml_file_path, 'r') as f:
                 return yaml.safe_load(f)

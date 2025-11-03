@@ -2,14 +2,11 @@ import json
 import logging
 from typing import List, Dict, Optional
 
-from config.logging_config import logging_config
-
 from redis import Redis, RedisError
 from dataclasses import asdict
 
 from models.article_metadata import ArticleMetadata
 
-logging_config(service_name="publisher")
 logger = logging.getLogger(__name__)
 
 class RedisManager:
