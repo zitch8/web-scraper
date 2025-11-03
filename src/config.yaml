@@ -25,6 +25,7 @@ scraper:
   selenium:
     headless: true
     implicit_wait: 10
+    timeout: 30
     no_sandbox: true
 
     # Fallback to Selenium if standard requests fail

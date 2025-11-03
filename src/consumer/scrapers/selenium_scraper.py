@@ -80,6 +80,11 @@ class SeleniumScraper(ScraperInterface):
             logger.info(f"Successfully scraped URL with Selenium: {url}")
             return soup, None
         
+        except NoSuchElementException as e:
+            error_message = f"Selenium element not found: {str(e)}"
+            logger.error(f"{error_message} - URL: {url}")
+            return None, error_message
+        
         except TimeoutException:
             error_message = f"Selenium timeout after {self.settings.scraper.selenium.timeout}s"
             logger.warning(f"{error_message} - URL: {url}")
