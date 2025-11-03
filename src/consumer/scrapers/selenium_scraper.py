@@ -64,7 +64,7 @@ class SeleniumScraper(ScraperInterface):
 
             self.driver.get(url)
 
-            WebDriverWait(self.driver, self.config.scraper.selenium.page_load_timeout).until(
+            WebDriverWait(self.driver, self.config.scraper.selenium.timeout).until(
                 EC.presence_of_element_located(By.TAG_NAME, "body")
             )
 
