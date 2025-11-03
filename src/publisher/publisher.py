@@ -6,7 +6,7 @@ from redis import Redis, RedisError
 from typing import List, Dict
 from dataclasses import asdict
 
-from models.article import Article
+from src.models.article_metadata import Article
 
 # Logging configuration
 logging.basicConfig(
