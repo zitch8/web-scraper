@@ -76,13 +76,6 @@ class MongoDB:
             self.collection.create_index([('priority', ASCENDING)], name='priority')
             self.collection.create_index([('scraped_at', DESCENDING)], name='scraped_at')
             
-            # Text index for searching
-            self.collection.create_index([
-                ('title', TEXT),
-                ('description', TEXT),
-                ('article_text', TEXT)
-            ], name='text_search')
-            
             logger.info("Database indexes created successfully")
             
         except PyMongoError as e:
@@ -103,11 +96,20 @@ class MongoDB:
             
             # Try insert first
             self.collection.insert_one(article_dict)
-            logger.info(f"Saved article {article.id} (status: {article.status})")
+            logger.info(f"Saved article {article.id} (status: {article.technical_metadata.status})")
             return True
             
         except DuplicateKeyError:
             # Article exists, update instead
+            
+            if article.technical_metadata.status == 'success':
+                logger.info(f"Article {article.id} already scraped successfully, skipping...")
+                return False
+            
+            if article.technical_metadata.status == 'failed' and article.technical_metadata.retry_count >= 3:
+                logger.info(f"Article {article.id} failed too many times, skipping...")
+                return False
+            
             return self._update_duplicate(article)
             
         except PyMongoError as e:

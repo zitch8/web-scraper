@@ -71,23 +71,13 @@ class Consumer:
         Process single article: scrape, extract, store
 
         Args:
-            article_data: Article metadata dictionary
+            article_data: ArticleMetadata dictionary
         """
         start_time = time.time()
         
         try:
             metadata = ArticleMetadata(**article_data)
-            article = Article.from_metadata(metadata)
-            
-            # Check if article already exists
-            existing = self.db.find_by_url_hash(article.url_hash)
-            if existing:
-                if existing.technical_metadata.status == 'success':
-                    logger.info(f"Article {article.id} already scraped successfully, skipping...")
-                    return
-                elif existing.technical_metadata.status == 'faield' and existing.technical_metadata.retry_count >= 3:
-                    logger.info(f"Article {article.id} failed too many times, skipping...")
-                    return
+            article = Article.from_metadata(metadata)        
 
             logger.info(f"Processing article {article.id}: {article.url}")
 

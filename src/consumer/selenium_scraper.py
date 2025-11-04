@@ -20,6 +20,13 @@ class SeleniumScraper(ScraperInterface):
     """Scraper using selenium for JavaScript-rendered content"""
 
     def __init__(self, settings):
+        """
+        Initialize the scraper with configuration
+
+        Args:
+            settings: Scraper configuration object
+        """
+        
         super().__init__(settings)
         self.driver = None
 

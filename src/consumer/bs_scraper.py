@@ -28,7 +28,7 @@ class BeautifulSoupScraper(ScraperInterface):
 
         for attempt in range(self.settings.request.max_retries):
             try:
-                logger.info(f"Scraping with BeautifulSoup - URL: {url}, Attempt: {attempt + 1}/ {self.settings.scraper.request.max_retries}")
+                logger.info(f"Scraping with BeautifulSoup - URL: {url}, Attempt: {attempt + 1}/ {self.settings.request.max_retries}")
 
                 response = self.session.get(
                     url,
@@ -90,7 +90,6 @@ class BeautifulSoupScraper(ScraperInterface):
                 return None, error_message
     
         return None, "Max retries exceeded"
-        
     def close(self):
         """Close the requests session"""
         try:

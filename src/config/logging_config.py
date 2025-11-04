@@ -5,7 +5,7 @@ from pathlib import Path
 def logging_config(service_name: str = 'app'):
     """Set up centralized logging configuration."""
     CONFIG_PATH = Path(__file__).resolve().parent / "logging.ini"
-    LOG_DIR = Path(__file__).parent.parent / 'logs'
+    LOG_DIR = Path(__file__).resolve().parent.parent.parent / 'logs'
     LOG_DIR.mkdir(exist_ok=True)
 
     # Modify logging.ini to set dynamic log file path

@@ -98,8 +98,22 @@ class RedisManager:
         """
 
         try:
-            queue_name = self.settings.get_queue_name(priority)
-            result = self._pop_from_queue(queue_name, timeout)
+            if priority:
+                # Pop from specific queue
+                queue_name = self.settings.get_queue_name(priority)
+                result = self._pop_from_queue(queue_name, timeout)
+            else:
+                # Pop from queues in priority order
+                queues = [
+                    self.settings.queue_high,
+                    self.settings.queue_medium,
+                    self.settings.queue_low
+                ]
+                result = None
+                for queue_name in queues:
+                    result = self._pop_from_queue(queue_name, timeout)
+                    if result:
+                        break
 
             if result:
                 article = json.loads(result)

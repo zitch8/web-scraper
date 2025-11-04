@@ -80,7 +80,6 @@ def main():
 
         try:
             consumer_service.run(max_articles=max_articles)
-                       
         except KeyboardInterrupt:
             logger.info("Cosumer service interrupted")
         finally:

@@ -27,11 +27,7 @@ class RedisConfig:
     queue_low: str = "articles:queue:low"
 
     def get_queue_name(self, priority: str) -> str:
-        """Return a list of all queue names."""
-
-        if not priority:
-            return self.queue_low
-        
+        """Return a list of all queue names."""        
         priority_map = {
             'high': self.queue_high,
             'medium': self.queue_medium,

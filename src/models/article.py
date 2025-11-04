@@ -61,16 +61,6 @@ class Article:
         self.technical_metadata.scraped_date = datetime.now().isoformat()
         self.technical_metadata.error_message = error_message
         self.technical_metadata.retry_count += 1
-
-    def should_use_selenium_fallback(self, technical_metadata: TechnicalMetadata) -> bool:
-        """Determine if Selenium fallback should be used based"""
-        if self.technical_metadata.status == "failed" and self.technical_metadata.scraping_method != "selenium":
-            return True
-        
-        if self.scraped_metadata and not self.scraped_metadata.is_valid():
-            return True
-        
-        return False
     
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary"""
@@ -99,22 +89,18 @@ class Article:
             category = metadata.category,
             priority = metadata.priority
         )
-    
+
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> 'Article':
-        """Create Article instance from data."""
+        scraped_metadata = data.get("scraped_metadata")
+        technical_metadata = data.get("technical_metadata")
 
-        content_fields = {
-            'title', 'description', 'keywords', 'author',
-            'published_date', 'modified_date', 'images', 'canonical_url',
-            'fb_app_id', 'fb_page_id', 'og_title', 'og_description', 'og_image',
-            'og_site_name', 'article_publisher', 'og_type', 'twitter_card',
-            'twitter_title', 'twitter_description', 'twitter_image', 'twitter_creator', 'twitter_site'
-        }
-        content_data = {}
-        for key, value in data.items():
-            if key in content_fields and value is not None:
-                content_data[key] = value
-        
-        scraped_metadata = ScrapedMetadata(**content_data) if content_data else None
-
+        return cls(
+            id=data["id"],
+            url=data["url"],
+            source=data["source"],
+            category=data["category"],
+            priority=data["priority"],
+            scraped_metadata=scraped_metadata,
+            technical_metadata=technical_metadata
+        )

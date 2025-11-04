@@ -48,7 +48,7 @@ class ScraperInterface(ABC):
             bool: True if valid, False otherwise
         """
 
-        required_elements = self.settings.scraper.selenium.get("required_elements", [])
+        required_elements = getattr(self.settings.selenium, "requred_elements", [])
 
         for element in required_elements:
             if element == "title":

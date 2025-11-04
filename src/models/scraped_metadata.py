@@ -4,7 +4,6 @@ from dataclasses import dataclass, field, asdict
 @dataclass
 class SocialPlatformMetadata:
     publisher: Optional[str] = None
-    properties: Dict[str, Optional[str]] = field(default_factory=dict)
 
 @dataclass
 class FacebookMetadata(SocialPlatformMetadata):
