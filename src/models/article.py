@@ -1,16 +1,19 @@
 import hashlib
+import logging
 from datetime import datetime
 
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass, asdict,field
 from typing import Optional, Dict, Any
 
 from src.models.scraped_metadata import ScrapedMetadata
 from src.models.article_metadata import ArticleMetadata
 
+logger = logging.getLogger(__name__)
+
 @dataclass
 class TechnicalMetadata:
     """Technical metadata for an article"""
-    url_hash: str = ""
+    url_hash: str = field(default_factory=str)
     scraped_date: str = None
     scraping_method: str = None
     status: str = "pending"
@@ -34,12 +37,13 @@ class Article:
     priority: str
 
     scraped_metadata: Optional[ScrapedMetadata] = None
-    technical_metadata: TechnicalMetadata = TechnicalMetadata()
+    technical_metadata: TechnicalMetadata = field(default_factory=TechnicalMetadata)
 
     def __post_init__(self):
         """Generate url_hash if not provided"""
         if not self.technical_metadata.url_hash:
-            self.url_hash = self._generate_url_hash()
+            logger.debug(f"[DEBUG] Generating hash for URL: {self.url}")
+            self.technical_metadata.url_hash = self._generate_url_hash()
 
     def _generate_url_hash(self) -> str:
         """Generate a SHA256 hash of the URL for deduplication"""

@@ -52,7 +52,7 @@ class MongoDB:
         try:
             # Unique index on url_hash for deduplication
             self.collection.create_index(
-                [('url_hash', ASCENDING)],
+                [('technical_metadata.url_hash', ASCENDING)],
                 unique=True,
                 name='url_hash_unique'
             )
@@ -65,16 +65,16 @@ class MongoDB:
             
             # Compound index for filtering and sorting
             self.collection.create_index([
-                ('status', ASCENDING),
+                ('technical_metadata.status', ASCENDING),
                 ('priority', ASCENDING),
-                ('scraped_at', DESCENDING)
+                ('technical_metadata.scraped_date', DESCENDING)
             ], name='status_priority_date')
             
             # Indexes for filtering
             self.collection.create_index([('category', ASCENDING)], name='category')
             self.collection.create_index([('source', ASCENDING)], name='source')
             self.collection.create_index([('priority', ASCENDING)], name='priority')
-            self.collection.create_index([('scraped_at', DESCENDING)], name='scraped_at')
+            self.collection.create_index([('technical_metadata.scraped_date', DESCENDING)], name='scraped_date')
             
             logger.info("Database indexes created successfully")
             
@@ -101,13 +101,8 @@ class MongoDB:
             
         except DuplicateKeyError:
             # Article exists, update instead
-            
             if article.technical_metadata.status == 'success':
-                logger.info(f"Article {article.id} already scraped successfully, skipping...")
-                return False
-            
-            if article.technical_metadata.status == 'failed' and article.technical_metadata.retry_count >= 3:
-                logger.info(f"Article {article.id} failed too many times, skipping...")
+                logger.info(f"Article {article.id} {article.technical_metadata.url_hash} already scraped successfully")
                 return False
             
             return self._update_duplicate(article)
@@ -121,9 +116,9 @@ class MongoDB:
         try:
             article_dict = article.to_dict()
             
-            result = self.collection.update_one(
-                {'url_hash': article.url_hash},
-                {'$set': article_dict}
+            result = self.collection.replace_one(
+                {'technical_metadata.url_hash': article.technical_metadata.url_hash},
+                article_dict
             )
             
             if result.modified_count > 0:
@@ -160,7 +155,7 @@ class MongoDB:
     def find_by_url_hash(self, url_hash: str) -> Optional[Article]:
         """Find article by URL hash"""
         try:
-            doc = self.collection.find_one({'url_hash': url_hash}, {'_id': 0})
+            doc = self.collection.find_one({'technical_metadata.url_hash': url_hash}, {'_id': 0})
             if doc:
                 return Article.from_dict(doc)
             return None
@@ -173,7 +168,7 @@ class MongoDB:
         """Find articles by status"""
         try:
             cursor = self.collection.find(
-                {'status': status},
+                {'technical_metadata.status': status},
                 {'_id': 0}
             ).sort('scraped_at', DESCENDING).limit(limit)
             
@@ -186,7 +181,7 @@ class MongoDB:
     def count_by_status(self, status: str) -> int:
         """Count articles by status"""
         try:
-            return self.collection.count_documents({'status': status})
+            return self.collection.count_documents({'technical_metadata.status': status})
         except PyMongoError as e:
             logger.error(f"Error counting articles: {e}")
             return 0
