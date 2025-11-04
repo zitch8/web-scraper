@@ -3,7 +3,7 @@ import logging
 from bs4 import BeautifulSoup
 from typing import Optional, List
 
-from ...models.scraped_metadata import (
+from src.models.scraped_metadata import (
     ScrapedMetadata,
     SocialMediaMetadata,
     FacebookMetadata,

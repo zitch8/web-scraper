@@ -126,7 +126,7 @@ class ConsumerConfig:
 class PublisherConfig:
     # TODO: Add publisher-specific configurations
     input_file: str = "data/data.json"
-    clear_queue_on_start: bool = False
+    clear_queues_on_start: bool = False
     batch_size: int = 10
 
 # @dataclass

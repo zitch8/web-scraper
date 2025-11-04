@@ -1,14 +1,11 @@
 import logging
 import sys
-from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).parent.parent))
+from src.publisher.redis_queue import RedisManager
+from src.services.publisher import Publisher
 
-from ..src.publisher.redis_queue import RedisManager
-from ..src.publisher.publisher import Publisher
-
-from config.settings import settings
-from config.logging_config import logging_config
+from src.config.settings import settings
+from src.config.logging_config import logging_config
 
 def main():
     """Main execution"""

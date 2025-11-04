@@ -3,10 +3,7 @@ from typing import Tuple, Optional
 from bs4 import BeautifulSoup
 import logging
 
-from config.logging_config import logging_config
-logging_config(service_name='scraper')
 logger = logging.getLogger(__name__)
-
 
 class ScraperInterface(ABC):
     """Abstract base class for all scrapers"""

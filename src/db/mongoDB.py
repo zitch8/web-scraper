@@ -1,7 +1,7 @@
 import logging
 from typing import Optional, Any, Dict, List
 
-from ..models.article import Article
+from src.models.article import Article
 
 from pymongo import MongoClient, ASCENDING, DESCENDING, TEXT
 from pymongo.errors import DuplicateKeyError, PyMongoError

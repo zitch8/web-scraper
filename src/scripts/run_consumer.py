@@ -1,16 +1,11 @@
 import sys
-from pathlib import Path
-
-sys.path.insert(0, str(Path(__file__).parent.parent))
-
-
 import logging
 
-from config.logging_config import logging_config
-from config.settings import settings
+from src.config.logging_config import logging_config
+from src.config.settings import settings
 
-from src.consumer.consumer import Consumer
-from src.consumer.scrapers.scraper_manager import ScraperManager
+from src.services.consumer import Consumer
+from src.consumer.scraper_manager import ScraperManager
 from src.publisher.redis_queue import RedisManager
 from src.db.mongoDB import MongoDB
 

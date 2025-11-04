@@ -1,0 +1,133 @@
+2025-11-04 20:09:59,834 - __main__ - INFO - ==================================================
+2025-11-04 20:09:59,835 - __main__ - INFO - Publisher starting
+2025-11-04 20:09:59,836 - __main__ - INFO - ==================================================
+2025-11-04 20:09:59,836 - __main__ - INFO - Initializing Redis connection...
+2025-11-04 20:10:03,917 - src.publisher.redis_queue - ERROR - Failed to connec to Redis: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it.
+2025-11-04 20:10:03,919 - __main__ - ERROR - Publisher failed with error: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it.
+Traceback (most recent call last):
+  File "C:\Daren\Projects\Media Meter\web-scraper\.venv\lib\site-packages\redis\connection.py", line 855, in connect_check_health
+    sock = self.retry.call_with_retry(
+  File "C:\Daren\Projects\Media Meter\web-scraper\.venv\lib\site-packages\redis\retry.py", line 116, in call_with_retry
+    return do()
+  File "C:\Daren\Projects\Media Meter\web-scraper\.venv\lib\site-packages\redis\connection.py", line 856, in <lambda>
+    lambda: self._connect(), lambda error: self.disconnect(error)
+  File "C:\Daren\Projects\Media Meter\web-scraper\.venv\lib\site-packages\redis\connection.py", line 1306, in _connect
+    raise err
+  File "C:\Daren\Projects\Media Meter\web-scraper\.venv\lib\site-packages\redis\connection.py", line 1290, in _connect
+    sock.connect(socket_address)
+ConnectionRefusedError: [WinError 10061] No connection could be made because the target machine actively refused it
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Daren\Projects\Media Meter\web-scraper\src\scripts\run_publisher.py", line 32, in main
+    queue_manager = RedisManager(settings.redis)
+  File "C:\Daren\Projects\Media Meter\web-scraper\src\publisher\redis_queue.py", line 27, in __init__
+    self._connect()
+  File "C:\Daren\Projects\Media Meter\web-scraper\src\publisher\redis_queue.py", line 34, in _connect
+    self.client.ping()
+  File "C:\Daren\Projects\Media Meter\web-scraper\.venv\lib\site-packages\redis\commands\core.py", line 1224, in ping
+    return self.execute_command("PING", **kwargs)
+  File "C:\Daren\Projects\Media Meter\web-scraper\.venv\lib\site-packages\redis\client.py", line 657, in execute_command
+    return self._execute_command(*args, **options)
+  File "C:\Daren\Projects\Media Meter\web-scraper\.venv\lib\site-packages\redis\client.py", line 663, in _execute_command
+    conn = self.connection or pool.get_connection()
+  File "C:\Daren\Projects\Media Meter\web-scraper\.venv\lib\site-packages\redis\utils.py", line 196, in wrapper
+    return func(*args, **kwargs)
+  File "C:\Daren\Projects\Media Meter\web-scraper\.venv\lib\site-packages\redis\connection.py", line 2601, in get_connection
+    connection.connect()
+  File "C:\Daren\Projects\Media Meter\web-scraper\.venv\lib\site-packages\redis\connection.py", line 846, in connect
+    self.connect_check_health(check_health=True)
+  File "C:\Daren\Projects\Media Meter\web-scraper\.venv\lib\site-packages\redis\connection.py", line 863, in connect_check_health
+    raise ConnectionError(self._error_message(e))
+redis.exceptions.ConnectionError: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it.
+2025-11-04 20:11:17,502 - __main__ - INFO - ==================================================
+2025-11-04 20:11:17,503 - __main__ - INFO - Publisher starting
+2025-11-04 20:11:17,504 - __main__ - INFO - ==================================================
+2025-11-04 20:11:17,504 - __main__ - INFO - Initializing Redis connection...
+2025-11-04 20:11:17,548 - src.publisher.redis_queue - INFO - Connected to Redis at localhost:6379
+2025-11-04 20:11:17,550 - __main__ - INFO - Initializing Publisher Service...
+2025-11-04 20:11:17,551 - __main__ - INFO - Input file: data/data.json
+2025-11-04 20:11:17,551 - __main__ - INFO - Starting to publish articles...
+2025-11-04 20:11:17,552 - __main__ - ERROR - Publisher failed with error: 'Publisher' object has no attribute 'config'
+Traceback (most recent call last):
+  File "C:\Daren\Projects\Media Meter\web-scraper\src\scripts\run_publisher.py", line 46, in main
+    stats = publisher.publish_from_file(input_file)
+  File "C:\Daren\Projects\Media Meter\web-scraper\src\services\publisher.py", line 159, in publish_from_file
+    if self.config.clear_queues_on_start:
+AttributeError: 'Publisher' object has no attribute 'config'
+2025-11-04 20:13:01,327 - __main__ - INFO - ==================================================
+2025-11-04 20:13:01,328 - __main__ - INFO - Publisher starting
+2025-11-04 20:13:01,329 - __main__ - INFO - ==================================================
+2025-11-04 20:13:01,329 - __main__ - INFO - Initializing Redis connection...
+2025-11-04 20:13:01,447 - src.publisher.redis_queue - INFO - Connected to Redis at localhost:6379
+2025-11-04 20:13:01,449 - __main__ - INFO - Initializing Publisher Service...
+2025-11-04 20:13:01,450 - __main__ - INFO - Input file: data/data.json
+2025-11-04 20:13:01,450 - __main__ - INFO - Starting to publish articles...
+2025-11-04 20:13:01,451 - __main__ - ERROR - Publisher failed with error: 'Publisher' object has no attribute 'config'
+Traceback (most recent call last):
+  File "C:\Daren\Projects\Media Meter\web-scraper\src\scripts\run_publisher.py", line 46, in main
+    stats = publisher.publish_from_file(input_file)
+  File "C:\Daren\Projects\Media Meter\web-scraper\src\services\publisher.py", line 163, in publish_from_file
+    if self.config.clear_queues_on_start:
+AttributeError: 'Publisher' object has no attribute 'config'
+2025-11-04 20:13:48,056 - __main__ - INFO - ==================================================
+2025-11-04 20:13:48,057 - __main__ - INFO - Publisher starting
+2025-11-04 20:13:48,057 - __main__ - INFO - ==================================================
+2025-11-04 20:13:48,058 - __main__ - INFO - Initializing Redis connection...
+2025-11-04 20:13:48,109 - src.publisher.redis_queue - INFO - Connected to Redis at localhost:6379
+2025-11-04 20:13:48,111 - __main__ - INFO - Initializing Publisher Service...
+2025-11-04 20:13:48,112 - __main__ - INFO - Input file: data/data.json
+2025-11-04 20:13:48,112 - __main__ - INFO - Starting to publish articles...
+2025-11-04 20:13:48,113 - __main__ - ERROR - Publisher failed with error: 'PublisherConfig' object has no attribute 'clear_queues_on_start'
+Traceback (most recent call last):
+  File "C:\Daren\Projects\Media Meter\web-scraper\src\scripts\run_publisher.py", line 46, in main
+    stats = publisher.publish_from_file(input_file)
+  File "C:\Daren\Projects\Media Meter\web-scraper\src\services\publisher.py", line 163, in publish_from_file
+    if self.settings.clear_queues_on_start:
+AttributeError: 'PublisherConfig' object has no attribute 'clear_queues_on_start'
+2025-11-04 20:14:49,823 - __main__ - INFO - ==================================================
+2025-11-04 20:14:49,824 - __main__ - INFO - Publisher starting
+2025-11-04 20:14:49,825 - __main__ - INFO - ==================================================
+2025-11-04 20:14:49,825 - __main__ - INFO - Initializing Redis connection...
+2025-11-04 20:14:49,862 - src.publisher.redis_queue - INFO - Connected to Redis at localhost:6379
+2025-11-04 20:14:49,864 - __main__ - INFO - Initializing Publisher Service...
+2025-11-04 20:14:49,865 - __main__ - INFO - Input file: data/data.json
+2025-11-04 20:14:49,866 - __main__ - INFO - Starting to publish articles...
+2025-11-04 20:14:49,868 - src.services.publisher - ERROR - File not found: File not found: data\data.json
+2025-11-04 20:14:49,869 - __main__ - ERROR - File not found: File not found: data\data.json
+2025-11-04 20:16:31,796 - __main__ - INFO - ==================================================
+2025-11-04 20:16:31,797 - __main__ - INFO - Publisher starting
+2025-11-04 20:16:31,798 - __main__ - INFO - ==================================================
+2025-11-04 20:16:31,799 - __main__ - INFO - Initializing Redis connection...
+2025-11-04 20:16:31,833 - src.publisher.redis_queue - INFO - Connected to Redis at localhost:6379
+2025-11-04 20:16:31,836 - __main__ - INFO - Initializing Publisher Service...
+2025-11-04 20:16:31,837 - __main__ - INFO - Input file: ../../data/data.json
+2025-11-04 20:16:31,837 - __main__ - INFO - Starting to publish articles...
+2025-11-04 20:16:31,842 - src.models.article_metadata - DEBUG - Validation successful for article: 001
+2025-11-04 20:16:31,843 - src.models.article_metadata - DEBUG - Validation successful for article: 002
+2025-11-04 20:16:31,843 - src.models.article_metadata - DEBUG - Validation successful for article: 003
+2025-11-04 20:16:31,843 - src.models.article_metadata - DEBUG - Validation successful for article: 004
+2025-11-04 20:16:31,844 - src.models.article_metadata - DEBUG - Validation successful for article: 005
+2025-11-04 20:16:31,844 - src.models.article_metadata - DEBUG - Validation successful for article: 006
+2025-11-04 20:16:31,844 - src.models.article_metadata - DEBUG - Validation successful for article: 007
+2025-11-04 20:16:31,844 - src.models.article_metadata - DEBUG - Validation successful for article: 008
+2025-11-04 20:16:31,844 - src.models.article_metadata - DEBUG - Validation successful for article: 009
+2025-11-04 20:16:31,844 - src.models.article_metadata - DEBUG - Validation successful for article: 010
+2025-11-04 20:16:31,845 - src.services.publisher - INFO - Loaded 10 valid articles from ..\..\data\data.json
+2025-11-04 20:16:31,848 - src.services.publisher - INFO - Starting to publish 10 articles...
+2025-11-04 20:16:31,883 - src.publisher.redis_queue - DEBUG - Pushed article 001 to articles:queue:high
+2025-11-04 20:16:31,885 - src.publisher.redis_queue - DEBUG - Pushed article 002 to articles:queue:medium
+2025-11-04 20:16:31,887 - src.publisher.redis_queue - DEBUG - Pushed article 003 to articles:queue:low
+2025-11-04 20:16:31,891 - src.publisher.redis_queue - DEBUG - Pushed article 004 to articles:queue:medium
+2025-11-04 20:16:31,894 - src.publisher.redis_queue - DEBUG - Pushed article 005 to articles:queue:high
+2025-11-04 20:16:31,897 - src.publisher.redis_queue - DEBUG - Pushed article 006 to articles:queue:medium
+2025-11-04 20:16:31,898 - src.publisher.redis_queue - DEBUG - Pushed article 007 to articles:queue:low
+2025-11-04 20:16:31,899 - src.publisher.redis_queue - DEBUG - Pushed article 008 to articles:queue:high
+2025-11-04 20:16:31,900 - src.publisher.redis_queue - DEBUG - Pushed article 009 to articles:queue:medium
+2025-11-04 20:16:31,901 - src.publisher.redis_queue - DEBUG - Pushed article 010 to articles:queue:high
+2025-11-04 20:16:31,902 - src.services.publisher - INFO - Processed batch 1: 10/10 successful
+2025-11-04 20:16:31,902 - __main__ - INFO - ==================================================
+2025-11-04 20:16:31,903 - __main__ - INFO - Publishing completed successfully!
+2025-11-04 20:16:31,903 - __main__ - INFO - ==================================================
+2025-11-04 20:16:31,904 - src.publisher.redis_queue - INFO - Redis connection closed

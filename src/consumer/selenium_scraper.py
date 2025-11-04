@@ -12,7 +12,7 @@ from selenium.common.exceptions import TimeoutException, WebDriverException, NoS
 
 from webdriver_manager.chrome import ChromeDriverManager
 
-from .base_scraper import ScraperInterface
+from src.consumer.base_scraper import ScraperInterface
 
 logger = logging.getLogger(__name__)
 

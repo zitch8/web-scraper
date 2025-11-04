@@ -6,10 +6,8 @@ from bs4 import BeautifulSoup
 
 from typing import Tuple, Optional
 
-from .base_scraper import ScraperInterface
-from config.logging_config import logging_config
+from src.consumer.base_scraper import ScraperInterface
 
-logging_config(service_name='scraper')
 logger = logging.getLogger(__name__)
 
 class BeautifulSoupScraper(ScraperInterface):

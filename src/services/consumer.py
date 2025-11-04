@@ -3,12 +3,12 @@ import logging
 from datetime import datetime
 from typing import Optional, Dict, Any
 
-from ..publisher.redis_queue import RedisManager
-from ..db.mongoDB import MongoDB
-from .scrapers.scraper_manager import ScraperManager
+from src.publisher.redis_queue import RedisManager
+from src.db.mongoDB import MongoDB
+from src.consumer.scraper_manager import ScraperManager
 
-from ..models.article_metadata import ArticleMetadata
-from ..models.article import Article
+from src.models.article_metadata import ArticleMetadata
+from src.models.article import Article
 
 logger = logging.getLogger(__name__)
 

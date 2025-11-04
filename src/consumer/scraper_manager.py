@@ -3,10 +3,10 @@ import time
 
 from typing import Optional, Tuple
 
-from .bs_scraper import BeautifulSoupScraper
-from .selenium_scraper import SeleniumScraper
-from .extractors import MetadataExtractor
-from ...models.scraped_metadata import ScrapedMetadata
+from src.consumer.bs_scraper import BeautifulSoupScraper
+from src.consumer.selenium_scraper import SeleniumScraper
+from src.consumer.extractors import MetadataExtractor
+from src.models.scraped_metadata import ScrapedMetadata
 
 logger = logging.getLogger(__name__)
 

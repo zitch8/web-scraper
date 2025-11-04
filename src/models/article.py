@@ -4,8 +4,8 @@ from datetime import datetime
 from dataclasses import dataclass, asdict
 from typing import Optional, Dict, Any
 
-from .scraped_metadata import ScrapedMetadata
-from .article_metadata import ArticleMetadata
+from src.models.scraped_metadata import ScrapedMetadata
+from src.models.article_metadata import ArticleMetadata
 
 @dataclass
 class TechnicalMetadata:

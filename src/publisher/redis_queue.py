@@ -5,7 +5,7 @@ from typing import List, Dict, Optional
 from redis import Redis, RedisError
 from dataclasses import asdict
 
-from ..models.article_metadata import ArticleMetadata
+from src.models.article_metadata import ArticleMetadata
 
 logger = logging.getLogger(__name__)
 

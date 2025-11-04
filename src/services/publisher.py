@@ -1,16 +1,12 @@
 import logging
-from config.logging_config import logging_config
-
 import json
 from pathlib import Path
 from datetime import datetime
 from typing import List, Dict, Any
 
-from models.article_metadata import ArticleMetadata
-from publisher.redis_queue import RedisManager
+from src.models.article_metadata import ArticleMetadata
+from src.publisher.redis_queue import RedisManager
 
-# Logging configuration
-logging_config(service_name="publisher")
 logger = logging.getLogger(__name__)
     
 class Publisher:
@@ -22,6 +18,10 @@ class Publisher:
     def __init__(self, queue_manager: RedisManager, settings):
         """
         Initialize publisher service
+
+        Args:
+            queue_manager: RedisManager instance
+            settings: PublisherConfig instance
         """
 
         self.queue_manager = queue_manager
@@ -126,7 +126,7 @@ class Publisher:
 
         logger.info(f"Starting to publish {len(articles)} articles...")
 
-        batch_size = self.config.batch_size
+        batch_size = self.settings.batch_size
 
         for i in range(0, len(articles), batch_size):
             batch = articles[i:i + batch_size]
@@ -152,15 +152,15 @@ class Publisher:
         Complete flow: load from file -> publish
 
         Args:
-            file_path: Path to articles JSON (use config default if None)
+            file_path: Path to articles JSON (use settings default if None)
         
         Returns:
             Dict of statistics
         """
-        file_path = file_path or self.config.input_file
+        file_path = file_path or self.settings.input_file
 
         # Clear queues on start if configured
-        if self.config.clear_queues_on_start:
+        if self.settings.clear_queues_on_start:
             logger.info("Clearing existing queues...")
             self.queue_manager.clear_all_queues()
 
