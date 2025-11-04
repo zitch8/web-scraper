@@ -1,5 +1,5 @@
-from dataclasses import dataclass
-from typing import Any, Dict, List
+from dataclasses import dataclass, field
+from typing import Any, Dict, List, Optional
 from pathlib import Path
 
 import os
@@ -15,18 +15,23 @@ class RedisConfig:
     """Redis client configuration."""
     host: str = os.getenv('REDIS_HOST')
     port: int = int(os.getenv('REDIS_PORT'))
-    db: int
-    socket_timeout: int
-    decode_responses: bool
-    max_connections: int
+
+    db: int = 0
+    socket_timeout: int = 5
+    decode_responses: bool = True
+    max_connections: int = 10
 
     # Queue names
-    queue_high: str
-    queue_medium: str
-    queue_low: str
+    queue_high: str = "articles:queue:high"
+    queue_medium: str = "articles:queue:medium"
+    queue_low: str = "articles:queue:low"
 
-    def get_queue_names(self, priority: str) -> str:
+    def get_queue_name(self, priority: str) -> str:
         """Return a list of all queue names."""
+
+        if not priority:
+            return self.queue_low
+        
         priority_map = {
             'high': self.queue_high,
             'medium': self.queue_medium,
@@ -49,23 +54,23 @@ class RedisConfig:
 class MongoDBConfig:
     """MongoDB client configuration."""
     uri: str = os.getenv('MONGODB_URI')
-    database_name: str = os.getenv('MONGODB_DATABASE')
-    collection_name: str = os.getenv('MONGODB_COLLECTION')
+    database: str = os.getenv('MONGODB_DATABASE')
+    collection: str = os.getenv('MONGODB_COLLECTION')
     
     def to_client_kwargs(self) -> Dict[str, Any]:
         """Return a dictionary of MongoDB client keyword arguments."""
         return {
             'uri': self.uri,
-            'database_name': self.database_name,
-            'collection_name': self.collection_name
+            'database_name': self.database,
+            'collection_name': self.collection
         }
     
 @dataclass
 class RequestsConfig:
     """Requests library client configuration."""
-    timeout: int
-    max_retries: int
-    retry_delay: int
+    timeout: int = 10
+    max_retries: int = 3
+    retry_delay: int = 2
 
     # TODO: Add proxy settings
 
@@ -82,13 +87,13 @@ class RequestsConfig:
 @dataclass
 class SeleniumConfig:
     """Selenium WebDriver client configuration."""
-    headless: bool
-    implicit_wait: int
-    timeout: int
-    no_sandbox: bool
+    headless: bool = True
+    implicit_wait: int = 10
+    timeout: int = 30
+    no_sandbox: bool = True
 
-    enabled_fallback: bool
-    required_elements: List[str]
+    enabled_fallback: bool = True
+    required_elements: List[str] = field(default_factory=list)
 
     # Return Chrome options if needed
     def get_chrome_options(self):
@@ -104,44 +109,37 @@ class SeleniumConfig:
             options.add_argument('--no-sandbox')
         
         return options
-    
-    def should_use_fallback(self, has_title: bool) -> bool:
-        """Determine if Selenium fallback should be used based on parsed HTML."""
-        if not self.enabled_fallback:
-            return False
-        
-        if "title" in self.required_elements and not has_title:
-            return True
-        
-        return False
 
 @dataclass
 class ScraperConfig:
-    request: RequestsConfig
-    selenium: SeleniumConfig
+    request: RequestsConfig = field(default_factory=RequestsConfig)
+    selenium: SeleniumConfig = field(default_factory=SeleniumConfig)
 
 @dataclass
 class ConsumerConfig:
     # TODO: Add consumer-specific configurations
-    pass
+    poll_interval: int = 2
+    max_articles: Optional[int] = None
+    batch_size: int = 1
 
 @dataclass
 class PublisherConfig:
     # TODO: Add publisher-specific configurations
-    pass
+    input_file: str = "data/data.json"
+    clear_queue_on_start: bool = False
+    batch_size: int = 10
 
-@dataclass
-class DashboardConfig:
-    host: str
-    port: int
+# @dataclass
+# class DashboardConfig:
+#     host: str
+#     port: int
 
-    enable_cors: bool
-    cors_origins: str
+#     enable_cors: bool
+#     cors_origins: str
 
-    def __post_init__(self):
-        self.host = os.getenv('DASHBOARD_HOST')
-        self.port = int(os.getenv('DASHBOARD_PORT'))
-
+#     def __post_init__(self):
+#         self.host = os.getenv('DASHBOARD_HOST')
+#         self.port = int(os.getenv('DASHBOARD_PORT'))
 
 class Settings:
     """
@@ -196,13 +194,26 @@ class Settings:
         selenium_yaml = scraper_yaml.get('selenium', {})
         self._updated_from_yaml(self.scraper.selenium, selenium_yaml)
 
-        # Dashboard
-        dashboard_yaml = yaml_config.get('dashboard', {})
-        self.dashboard = DashboardConfig()
-        self._updated_from_yaml(self.dashboard, dashboard_yaml)
+        # Consumer
+        consumer_yaml = yaml_config.get('consumer', {})
+        self.consumer = ConsumerConfig()
+        self._updated_from_yaml(self.consumer, consumer_yaml)
+
+        # Publisher
+        publisher_yaml = yaml_config.get('publisher', {})
+        self.publisher = PublisherConfig()
+        self._updated_from_yaml(self.publisher, publisher_yaml)
+
+        # # Dashboard
+        # dashboard_yaml = yaml_config.get('dashboard', {})
+        # self.dashboard = DashboardConfig()
+        # self._updated_from_yaml(self.dashboard, dashboard_yaml)
 
     def _updated_from_yaml(self, config_instance, yaml_section: Dict[str, Any]):
         """Update a dataclass instance with values from a YAML section."""
+        if yaml_section is None:
+            yaml_section = {}
+
         for key, value in yaml_section.items():
             if hasattr(config_instance, key):
                 setattr(config_instance, key, value)

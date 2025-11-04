@@ -32,6 +32,16 @@ scraper:
     enabled_fallback: true
     required_elements: ["title"]
 
+consumer:
+  poll_interval: 2 # sec to wait when queue are empty
+  max_articles: null
+  batch_size: 1
+
+publisher:
+  input_file: "data/data.json"
+  clear_queue_on_start: false
+  batch_size: 10
+
 # Dashboard Configuration
 dashboard:
   enable_cors: true
