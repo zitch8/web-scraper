@@ -4,8 +4,8 @@ from datetime import datetime
 from dataclasses import dataclass, asdict
 from typing import Optional, Dict, Any
 
-from models.scraped_metadata import ScrapedMetadata
-from models.article_metadata import ArticleMetadata
+from .scraped_metadata import ScrapedMetadata
+from .article_metadata import ArticleMetadata
 
 @dataclass
 class TechnicalMetadata:
@@ -34,7 +34,7 @@ class Article:
     priority: str
 
     scraped_metadata: Optional[ScrapedMetadata] = None
-    technical_metadata: Optional[TechnicalMetadata] = TechnicalMetadata()
+    technical_metadata: TechnicalMetadata = TechnicalMetadata()
 
     def __post_init__(self):
         """Generate url_hash if not provided"""
@@ -83,6 +83,9 @@ class Article:
         }
         if self.scraped_metadata:
             data["scraped_metadata"] = self.scraped_metadata.to_dict()
+
+        if self.technical_metadata:
+            data['technical_metadata'] = self.technical_metadata.to_dict()
 
         return data
     

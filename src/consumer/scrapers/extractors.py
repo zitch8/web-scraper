@@ -3,15 +3,13 @@ import logging
 from bs4 import BeautifulSoup
 from typing import Optional, List
 
-from config.logging_config import logging_config
-from models.scraped_metadata import (
+from ...models.scraped_metadata import (
     ScrapedMetadata,
     SocialMediaMetadata,
     FacebookMetadata,
     TwitterMetadata,
 )
 
-logging_config(service_name='scraper')
 logger = logging.getLogger(__name__)
 
 class MetadataExtractor:

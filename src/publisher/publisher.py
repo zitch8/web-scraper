@@ -35,7 +35,7 @@ class Publisher:
             'end_time' : None
         }
 
-    def load_articles_from_json(self, file_path: str) -> List[ArticleMetadata]:
+    def load_articles_from_json(self, file: str) -> List[ArticleMetadata]:
         """
         Load articles from JSON file
         
@@ -49,7 +49,7 @@ class Publisher:
         articles = []
 
         try:
-            file_path = Path(file_path)
+            file_path = Path(file)
 
             if not file_path.exists():
                 raise FileNotFoundError(f"File not found: {file_path}")
@@ -172,8 +172,10 @@ class Publisher:
 
         publish_stats = self.publish_batch(articles)
 
+        return publish_stats
 
-    def _print_sttistics(self):
+
+    def _print_statistics(self):
         """Print publishing statistics"""
         logger.info("=" * 50)
         logger.info("PUBLISHING STATISTICS")

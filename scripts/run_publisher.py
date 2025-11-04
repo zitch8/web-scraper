@@ -1,8 +1,11 @@
 import logging
 import sys
+from pathlib import Path
 
-from src.publisher.redis_queue import RedisManager
-from src.publisher.publisher import Publisher
+sys.path.insert(0, str(Path(__file__).parent.parent))
+
+from ..src.publisher.redis_queue import RedisManager
+from ..src.publisher.publisher import Publisher
 
 from config.settings import settings
 from config.logging_config import logging_config

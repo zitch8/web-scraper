@@ -1,7 +1,5 @@
-import time
 from typing import Optional, Tuple
 import logging
-from config.logging_config import logging_config
 
 from bs4 import BeautifulSoup
 
@@ -13,9 +11,9 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException, WebDriverException, NoSuchElementException
 
 from webdriver_manager.chrome import ChromeDriverManager
-from scrapers.base_scraper import ScraperInterface
 
-logging_config(service_name='scraper')
+from .base_scraper import ScraperInterface
+
 logger = logging.getLogger(__name__)
 
 class SeleniumScraper(ScraperInterface):
@@ -25,7 +23,7 @@ class SeleniumScraper(ScraperInterface):
         super().__init__(settings)
         self.driver = None
 
-        if self.settings.scraper.selenium.enabled_fallback:
+        if self.settings.selenium.enabled_fallback:
             self._init_driver()
         
         else:
@@ -33,12 +31,12 @@ class SeleniumScraper(ScraperInterface):
 
     def _init_driver(self):
         try:
-            chrome_options = self.settings.scraper.selenium.get_chrome_options()
+            chrome_options = self.settings.selenium.get_chrome_options()
             service = Service(ChromeDriverManager().install())
             self.driver = webdriver.Chrome(service=service, options=chrome_options)
 
-            self.driver.set_page_load_timeout(self.settings.scraper.selenium.timeout)
-            self.driver.implicitly_wait(self.settings.scraper.selenium.implicit_wait)
+            self.driver.set_page_load_timeout(self.settings.selenium.timeout)
+            self.driver.implicitly_wait(self.settings.selenium.implicit_wait)
 
             logger.info("Selenium WebDriver initialized successfully.")
         
@@ -64,7 +62,7 @@ class SeleniumScraper(ScraperInterface):
 
             self.driver.get(url)
 
-            WebDriverWait(self.driver, self.config.scraper.selenium.timeout).until(
+            WebDriverWait(self.driver, self.settings.selenium.timeout).until(
                 EC.presence_of_element_located(By.TAG_NAME, "body")
             )
 
@@ -86,7 +84,7 @@ class SeleniumScraper(ScraperInterface):
             return None, error_message
         
         except TimeoutException:
-            error_message = f"Selenium timeout after {self.settings.scraper.selenium.timeout}s"
+            error_message = f"Selenium timeout after {self.settings.selenium.timeout}s"
             logger.warning(f"{error_message} - URL: {url}")
             return None, error_message
         

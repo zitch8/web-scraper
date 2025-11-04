@@ -5,7 +5,7 @@ from typing import List, Dict, Optional
 from redis import Redis, RedisError
 from dataclasses import asdict
 
-from models.article_metadata import ArticleMetadata
+from ..models.article_metadata import ArticleMetadata
 
 logger = logging.getLogger(__name__)
 
@@ -19,7 +19,7 @@ class RedisManager:
         Initialize Redis queue
 
         Args:
-            config: RedisConfig object from settings
+            settings: RedisConfig object from settings
         """
 
         self.settings = settings
@@ -47,7 +47,7 @@ class RedisManager:
         """
 
         try:
-            queue_name = self.config.get_queue_name(article_metadata.priority)
+            queue_name = self.settings.get_queue_name(article_metadata.priority)
             article_json = json.dumps(asdict(article_metadata))
 
             # FiFo method
@@ -144,7 +144,7 @@ class RedisManager:
         """
 
         try:
-            queue_name = self.config.get_queue_name(priority)
+            queue_name = self.settings.get_queue_name(priority)
             return self.client.llen(queue_name)
         except RedisError as e:
             logger.error(f"Failed to get queue length: {e}")
@@ -172,7 +172,7 @@ class RedisManager:
         """
 
         try:
-            queue_name = self.config.get_queue_name(priority)
+            queue_name = self.settings.get_queue_name(priority)
             self.client.delete(queue_name)
             logger.info(f"Cleared queue: {queue_name}")
             return True
@@ -184,9 +184,9 @@ class RedisManager:
         """Clear all article queues"""
         try:
             self.client.delete(
-                self.config.queue_high,
-                self.config.queue_medium,
-                self.config.queue_low
+                self.settings.queue_high,
+                self.settings.queue_medium,
+                self.settings.queue_low
             )
             logger.info("Cleared all queues")
             return True

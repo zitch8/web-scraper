@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 
 from typing import Tuple, Optional
 
-from scrapers.base_scraper import ScraperInterface
+from .base_scraper import ScraperInterface
 from config.logging_config import logging_config
 
 logging_config(service_name='scraper')
@@ -20,7 +20,7 @@ class BeautifulSoupScraper(ScraperInterface):
         Initialize the scraper with configuration
 
         Args:
-            config: Scraper configuration object
+            settings: Scraper configuration object
         """
         super().__init__(settings)
         self.session = requests.Session()
@@ -28,13 +28,13 @@ class BeautifulSoupScraper(ScraperInterface):
     def scrape(self, url: str)-> Tuple[Optional[BeautifulSoup], Optional[str]]:
         """Scrape a URL and return BeautifulSoup object"""
 
-        for attempt in range(self.settings.scraper.request.max_retries):
+        for attempt in range(self.settings.request.max_retries):
             try:
                 logger.info(f"Scraping with BeautifulSoup - URL: {url}, Attempt: {attempt + 1}/ {self.settings.scraper.request.max_retries}")
 
                 response = self.session.get(
                     url,
-                    timeout=self.settings.scraper.request.timeout
+                    timeout=self.settings.request.timeout
                 )
 
                 response.raise_for_status()
@@ -50,13 +50,13 @@ class BeautifulSoupScraper(ScraperInterface):
                 return soup, None
             
             except requests.exceptions.Timeout:
-                error_message = f"Timeout after {self.settings.scraper.request.timeout}s"
+                error_message = f"Timeout after {self.settings.request.timeout}s"
                 logger.warning(f"{error_message} - Attempt {attempt + 1}")
 
-                if attempt == self.settings.scraper.request.max_retries - 1:
+                if attempt == self.settings.request.max_retries - 1:
                     # Exponential backoff
 
-                    delay = self.settings.scraper.request.retry_delay ** attempt
+                    delay = self.settings.request.retry_delay ** attempt
                     logger.info(f"Retrying in {delay}s...")
                     time.sleep(delay)
                 else:
@@ -72,8 +72,8 @@ class BeautifulSoupScraper(ScraperInterface):
                 error_message = f"Connection error: {str(e)}"
                 logger.error(f"{error_message} - URL: {url}")
 
-                if attempt < self.settings.scraper.request.max_retries - 1:
-                    delay = self.settings.scraper.request.retry_delay ** attempt
+                if attempt < self.settings.request.max_retries - 1:
+                    delay = self.settings.request.retry_delay ** attempt
                     logger.info(f"Retrying in {delay}s...")
                     time.sleep(delay)
                 else:
