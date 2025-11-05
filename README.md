@@ -31,6 +31,9 @@ REDIS_PORT=6379
 MONGODB_URI=mongodb://localhost:27017
 MONGODB_DATABASE=scraper
 MONGODB_COLLECTION=scraped_articles
+
+DASHBOARD_HOST = "127.0.0.1"
+DASHBOARD_PORT = 5000
 ```
 
 ### YAML Config (src/config/config.yaml)
