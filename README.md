@@ -76,6 +76,11 @@ python src/scripts/run_publisher.py
 python src/scripts/run_consumer.py
 ```
 
+### Terminal 3 — Start Dashboard
+```bash
+python src/scripts/run_dashboard.py
+```
+
 ## 5. Features
 
 - **Priority-Based Queues**
@@ -104,6 +109,16 @@ python src/scripts/run_consumer.py
   - Content Metadata: title, description, author, publish_date, modified_date, image_url, canonical_url, keywords
   - Social Media Metadata: facebook, twitter
   - Technical Metadata: url_hash, scraped_date, scraping_method, status, error_message, processing_time, retry_count
+
+- **Dashboard Flask API**
+  Dashboard API runs on http://127.0.0.1:5000
+  then add this endpoints to view content. (Ex: http://127.0.0.1:5000/health )
+  Available endpoints:
+  - GET  /health          - Health check
+  - GET  /articles/<id>   - Get single article
+  - GET  /articles/failed - Get failed articles
+  - GET  /queue/stats     - Queue statistics
+  - POST /queue/clear     - Clear all queues
 
 ## 6. File Structure
 
