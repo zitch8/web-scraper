@@ -97,7 +97,12 @@ class Article:
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> 'Article':
         scraped_metadata = data.get("scraped_metadata")
-        technical_metadata = data.get("technical_metadata")
+        
+        technical_metadata_dict = data.get("technical_metadata") or {}
+        if isinstance(technical_metadata_dict, dict):
+            technical_metadata = TechnicalMetadata(**technical_metadata_dict)
+        else:
+            technical_metadata = technical_metadata_dict
 
         return cls(
             id=data["id"],

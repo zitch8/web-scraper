@@ -125,17 +125,13 @@ class PublisherConfig:
     clear_queues_on_start: bool = False
     batch_size: int = 10
 
-# @dataclass
-# class DashboardConfig:
-#     host: str
-#     port: int
+@dataclass
+class DashboardConfig:
+    host: str = os.getenv('DASHBOARD_HOST')
+    port: int = int(os.getenv('DASHBOARD_PORT'))
 
-#     enable_cors: bool
-#     cors_origins: str
-
-#     def __post_init__(self):
-#         self.host = os.getenv('DASHBOARD_HOST')
-#         self.port = int(os.getenv('DASHBOARD_PORT'))
+    enable_cors: bool = True
+    cors_origins: str = "*"
 
 class Settings:
     """
@@ -200,10 +196,10 @@ class Settings:
         self.publisher = PublisherConfig()
         self._updated_from_yaml(self.publisher, publisher_yaml)
 
-        # # Dashboard
-        # dashboard_yaml = yaml_config.get('dashboard', {})
-        # self.dashboard = DashboardConfig()
-        # self._updated_from_yaml(self.dashboard, dashboard_yaml)
+        # Dashboard
+        dashboard_yaml = yaml_config.get('dashboard', {})
+        self.dashboard = DashboardConfig()
+        self._updated_from_yaml(self.dashboard, dashboard_yaml)
 
     def _updated_from_yaml(self, config_instance, yaml_section: Dict[str, Any]):
         """Update a dataclass instance with values from a YAML section."""

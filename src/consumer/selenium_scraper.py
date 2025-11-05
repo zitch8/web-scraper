@@ -70,7 +70,7 @@ class SeleniumScraper(ScraperInterface):
             self.driver.get(url)
 
             WebDriverWait(self.driver, self.settings.selenium.timeout).until(
-                EC.presence_of_element_located(By.TAG_NAME, "body")
+                EC.presence_of_element_located((By.TAG_NAME, "body"))
             )
 
             html = self.driver.page_source
