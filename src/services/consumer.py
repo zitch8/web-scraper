@@ -77,30 +77,36 @@ class Consumer:
         
         try:
             metadata = ArticleMetadata(**article_data)
-            article = Article.from_metadata(metadata)        
-
-            logger.info(f"Processing article {article.id}: {article.url}")
-
-            content, method, error = self.scraper_manager.scrape_article(article.url)
-
-            processing_time = time.time() - start_time
-
-            if content:
-                article.mark_success(content, method, processing_time)
-                self.stats['success'] += 1
-                self.stats['by_method'][method] += 1
+            article = Article.from_metadata(metadata)     
+            existing = self.db.find_by_url_hash(article.technical_metadata.url_hash)
+            
+            if existing and existing.technical_metadata.status == "success":
+                logger.info(f"Article already exists, skipping: {article.url}")
 
             else:
-                article.mark_failed(error or 'Unknown error', method)
-                self.stats['failed'] += 1
-                self.stats['by_method']['failed'] += 1
-            
-            if self.db.save(article):
-                logger.info(f"Stored article {article.id} (status: {article.technical_metadata.status})")
-            else:
-                logger.error(f"Failed to store article {article.id}")
 
-            
+                logger.info(f"Processing article {article.id}: {article.url}")
+
+                content, method, error = self.scraper_manager.scrape_article(article.url)
+
+                processing_time = time.time() - start_time
+
+                if content:
+                    article.mark_success(content, method, processing_time)
+                    self.stats['success'] += 1
+                    self.stats['by_method'][method] += 1
+
+                else:
+                    article.mark_failed(error or 'Unknown error', method)
+                    self.stats['failed'] += 1
+                    self.stats['by_method']['failed'] += 1
+                
+                if self.db.save(article):
+                    logger.info(f"Stored article {article.id} (status: {article.technical_metadata.status})")
+                else:
+                    logger.error(f"Failed to store article {article.id}")
+
+                
             self.stats['total_processed'] += 1
             self.stats['by_priority'][article.priority.lower()] += 1
             self.stats['last_processed'] = datetime.now().isoformat()

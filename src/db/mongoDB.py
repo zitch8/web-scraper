@@ -101,10 +101,6 @@ class MongoDB:
             
         except DuplicateKeyError:
             # Article exists, update instead
-            if article.technical_metadata.status == 'success':
-                logger.info(f"Article {article.id} {article.technical_metadata.url_hash} already scraped successfully")
-                return False
-            
             return self._update_duplicate(article)
             
         except PyMongoError as e:
@@ -132,6 +128,7 @@ class MongoDB:
             logger.error(f"Failed to update duplicate article {article.id}: {e}")
             return False
     
+    # TODO: Add this to API
     def find_by_id(self, article_id: str) -> Optional[Article]:
         """
         Find article by ID
