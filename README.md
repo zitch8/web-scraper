@@ -128,6 +128,7 @@ python src/scripts/run_dashboard.py
 ```
 web-scraper
 ├── data/
+│   ├── data.json
 ├── logs/
 ├── src/
 │   ├── config/
