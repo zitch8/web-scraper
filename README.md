@@ -145,9 +145,12 @@ web-scraper
 │   │   ├── bs_scraper.py
 │   │   ├── selenium_scraper.py
 │   │   └── extractors.py
+│   ├── api/
+│   │   └── dashboard.py
 │   ├── scripts/
 │   │   ├── run_publisher.py
 │   │   └── run_consumer.py
+│   │   └── run_dashboard.py
 │   ├── services/
 │   │   ├── consumer.py
 │   │   └── publisher.py
