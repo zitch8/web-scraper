@@ -190,7 +190,7 @@ class Consumer:
         self._print_final_statistics()
 
         try:
-            self.scraper_manager.close
+            self.scraper_manager.close()
             logger.info("Scraper manager closed")
         except Exception as e:
             logger.error(f"Error closing scraper manager: {e}")
