@@ -96,6 +96,7 @@ class Article:
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> 'Article':
+        """Create Article instance from Dict"""
         scraped_metadata = data.get("scraped_metadata")
         
         technical_metadata_dict = data.get("technical_metadata") or {}

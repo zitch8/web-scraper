@@ -141,17 +141,14 @@ class Settings:
     def __new__(cls):
         if cls._instance is None:
             cls._instance = super(Settings, cls).__new__(cls)
-            cls._instance._initialized = False
         return cls._instance
 
     def __init__(self):
-        if self._initialized:
-            return
-
-        # Load YAML configuration file
-        yaml_config = self._load_yaml_config()
-        self._init_configs(yaml_config)
-        self._initialized = True
+        if not hasattr(self, "_initialized"):
+            # Load YAML configuration file
+            yaml_config = self._load_yaml_config()
+            self._init_configs(yaml_config)
+            self._initialized = True
     
     def _load_yaml_config(self) -> Dict[str, Any]:
         """Load configuration from a YAML file."""

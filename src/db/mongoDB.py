@@ -12,6 +12,12 @@ class MongoDB:
     """
     Establish MongoDB connection
     """
+    _instance = None
+
+    def __new__(cls, settings):
+        if not cls._instance:
+            cls._instance = super(MongoDB, cls).__new__(cls)
+        return cls._instance
 
     def __init__(self, settings):
         """
@@ -20,12 +26,13 @@ class MongoDB:
         Args:
             settings: MongoDBConfig
         """
-
-        self.settings = settings
-        self.client = None
-        self.db = None
-        self.collection = None
-        self._connect()
+        if not hasattr(self, "_initialized"):
+            self.settings = settings
+            self.client = None
+            self.db = None
+            self.collection = None
+            self._connect()
+            self._initialized = True
     
     def _connect(self):
         """Establish MongoDB connection"""
