@@ -49,3 +49,10 @@ class ScrapedMetadata:
     def to_dict(self) -> Dict[str, Any]:
         """Convert dataclass to dictionary."""
         return asdict(self)
+    
+    # @classmethod
+    # def from_dict(cls, data: Dict[str, Any]) -> 'ScrapedMetadata':
+    #     return cls(
+    #         title = data["title"]
+    #     )
+

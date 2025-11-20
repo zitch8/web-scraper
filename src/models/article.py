@@ -7,6 +7,7 @@ from typing import Optional, Dict, Any
 
 from src.models.scraped_metadata import ScrapedMetadata
 from src.models.article_metadata import ArticleMetadata
+from src.utils.normalize_url import normalize_url
 
 logger = logging.getLogger(__name__)
 
@@ -47,7 +48,8 @@ class Article:
 
     def _generate_url_hash(self) -> str:
         """Generate a SHA256 hash of the URL for deduplication"""
-        return hashlib.sha256(self.url.encode()).hexdigest()
+        normalized_url = normalize_url(self.url)
+        return hashlib.sha256(normalized_url.encode()).hexdigest()
 
     def mark_success(self, scraped_metadata: ScrapedMetadata, method: str, processing_time: float):
         """Mark article as successfully processed"""
